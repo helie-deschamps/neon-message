@@ -1,15 +1,8 @@
 import { PublicId } from "../User"
-import usersList from "../usersList"
+import spreadEventForAll from "../spreadEventForAll"
 
 function startTyping(publicId: PublicId) {
-	for (const userId of Object.keys(usersList)) {
-		usersList[userId].wsInstance.emit(
-			"stared_typing",
-			JSON.stringify({
-				id: publicId,
-			}),
-		)
-	}
+	spreadEventForAll("stared_typing", undefined, publicId)
 }
 
 export default startTyping

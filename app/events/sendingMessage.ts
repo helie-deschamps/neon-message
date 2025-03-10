@@ -1,5 +1,5 @@
 import { PublicId } from "../User"
-import usersList from "../usersList"
+import spreadEventForAll from "../spreadEventForAll"
 
 type SendingMessageDatas = {
 	message: string
@@ -8,15 +8,7 @@ type SendingMessageDatas = {
 function sendingMessage(data: string, publicId: PublicId) {
 	const { message }: SendingMessageDatas = JSON.parse(data)
 
-	for (const userId of Object.keys(usersList)) {
-		usersList[userId].wsInstance.emit(
-			"message_sent",
-			JSON.stringify({
-				id: publicId,
-				message
-			}),
-		)
-	}
+	spreadEventForAll("message_sent", { message }, publicId)
 }
 
 export default sendingMessage

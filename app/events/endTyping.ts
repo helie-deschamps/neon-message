@@ -1,15 +1,8 @@
 import { PublicId } from "../User"
-import usersList from "../usersList"
+import spreadEventForAll from "../spreadEventForAll"
 
 function endTyping(publicId: PublicId) {
-	for (const userId of Object.keys(usersList)) {
-		usersList[userId].wsInstance.emit(
-			"ended_typing",
-			JSON.stringify({
-				id: publicId,
-			}),
-		)
-	}
+	spreadEventForAll("ended_typing", undefined, publicId)
 }
 
 export default endTyping
