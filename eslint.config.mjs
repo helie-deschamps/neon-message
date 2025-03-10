@@ -31,6 +31,7 @@ const eslintConfig = [
 				},
 			],
 			"unicorn/number-literal-case": "off",
+			"unicorn/prefer-top-level-await": "off",
 		},
 	},
 ]

@@ -3,9 +3,9 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "tsx app/ws.ts",
 		"build": "next build",
-		"start": "next start",
+		"start": "set NODE_ENV=production && tsx app/ws.ts",
 		"pretify": "prettier --write .",
 		"lint": "prettier --write . && npx eslint --fix"
 	},
@@ -13,7 +13,8 @@
 		"next": "15.2.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
-		"socket.io": "^4.8.1"
+		"socket.io": "^4.8.1",
+		"socket.io-client": "^4.8.1"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.7",
@@ -26,6 +27,7 @@
 		"eslint-config-prettier": "^10.0.2",
 		"eslint-plugin-unicorn": "^57.0.0",
 		"prettier": "3.5.3",
+		"tsx": "^4.19.3",
 		"typescript": "^5"
 	}
 }

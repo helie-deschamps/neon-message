@@ -2,6 +2,8 @@ import Head from "next/head"
 import Image from "next/image"
 import { Geist, Geist_Mono } from "next/font/google"
 import styles from "@/styles/Home.module.css"
+import { useEffect, useState } from "react"
+import { socket } from "@/socket"
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -14,6 +16,38 @@ const geistMono = Geist_Mono({
 })
 
 export default function Home() {
+	const [isConnected, setIsConnected] = useState(false);
+	const [, setTransport] = useState("N/A");
+
+	useEffect(() => {
+		if (socket.connected) {
+			onConnect();
+		}
+
+		function onConnect() {
+			setIsConnected(true);
+			setTransport(socket.io.engine.transport.name);
+
+			socket.io.engine.on("upgrade", (transport) => {
+				setTransport(transport.name);
+			});
+		}
+
+		function onDisconnect() {
+			setIsConnected(false);
+			setTransport("N/A");
+		}
+
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("username_changed", (datas: string)=>console.log(datas));
+
+		return () => {
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+		};
+	}, []);
+
 	return (
 		<>
 			<Head>
@@ -36,7 +70,7 @@ export default function Home() {
 					/>
 					<ol>
 						<li>
-							Get started by editing <code>src/pages/index.tsx</code>.
+							{ isConnected ? "connected" : "disconnected" }
 						</li>
 						<li>Save and see your changes instantly.</li>
 					</ol>
@@ -44,18 +78,11 @@ export default function Home() {
 					<div className={styles.ctas}>
 						<a
 							className={styles.primary}
-							href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-							target="_blank"
-							rel="noopener noreferrer"
+							onClick={()=>socket.emit("change_username", JSON.stringify({
+								newUsername: "John Doe"
+							}))}
 						>
-							<Image
-								className={styles.logo}
-								src="/vercel.svg"
-								alt="Vercel logomark"
-								width={20}
-								height={20}
-							/>
-							Deploy now
+							Change username
 						</a>
 						<a
 							href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
