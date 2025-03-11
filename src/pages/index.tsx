@@ -1,6 +1,9 @@
 import Head from "next/head"
+import Image from "next/image"
 import { Geist, Geist_Mono } from "next/font/google"
 import styles from "@/styles/Home.module.css"
+import { useEffect, useState } from "react"
+import { socket } from "@/socket"
 import Messagereceveid from "@/components/MessageReceived"
 import MessageSend from "@/components/MessageSend"
 import InputBar from "@/components/InputBar"
@@ -19,6 +22,38 @@ const geistMono = Geist_Mono({
 })
 
 export default function Home() {
+	const [isConnected, setIsConnected] = useState(false);
+	const [, setTransport] = useState("N/A");
+
+	useEffect(() => {
+		if (socket.connected) {
+			onConnect();
+		}
+
+		function onConnect() {
+			setIsConnected(true);
+			setTransport(socket.io.engine.transport.name);
+
+			socket.io.engine.on("upgrade", (transport) => {
+				setTransport(transport.name);
+			});
+		}
+
+		function onDisconnect() {
+			setIsConnected(false);
+			setTransport("N/A");
+		}
+
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("username_changed", (datas: string)=>console.log(datas));
+
+		return () => {
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+		};
+	}, []);
+
 	return (
 		<>
 			<Head>

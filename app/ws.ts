@@ -1,23 +1,30 @@
 import { Server } from "socket.io"
-import changeUsername from "./events/changeUsername"
-import usersList from "./usersList"
-import newUser from "./events/newUser"
+import onConnection from "./onConnection"
 
-const io = new Server(3000, {
-	cors: {
-		origin: "*",
-		methods: ["GET", "POST"],
-	},
-})
+import { createServer } from "node:http";
+import next from "next";
 
-io.on("connection", socket => {
-	const publicId = socket.id
+const development = process.env.NODE_ENV !== "production";
+const hostname = "localhost";
+const port = 3000;
+// when using middleware `hostname` and `port` must be provided below
+const app = next({ dev: development, hostname, port });
+const handler = app.getRequestHandler();
 
-	newUser(socket, publicId)
+app.prepare().then(() => {
+	const httpServer = createServer(handler);
 
-	socket.on("change_username", (data: string) => changeUsername(data, publicId))
+	const io = new Server(httpServer);
 
-	socket.on("disconnect", () => {
-		delete usersList[publicId]
-	})
-})
+	io.on("connection", onConnection);
+
+	httpServer
+		.once("error", (error) => {
+			console.error(error);
+			// eslint-disable-next-line unicorn/no-process-exit
+			process.exit(1);
+		})
+		.listen(port, () => {
+			console.log(`> Ready on http://${hostname}:${port}`);
+		});
+});

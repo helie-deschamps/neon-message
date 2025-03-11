@@ -1,19 +1,16 @@
 import { PublicId } from "../User"
 import usersList from "../usersList"
+import spreadEventForAll from "../spreadEventForAll"
 
-type userConnectDatas = {
+type ChangeUsernameDatas = {
 	newUsername: string
 }
 
 function changeUsername(data: string, publicId: PublicId) {
-	const { newUsername }: userConnectDatas = JSON.parse(data)
+	const { newUsername }: ChangeUsernameDatas = JSON.parse(data)
 	usersList[publicId].username = newUsername
-	for (const userId of Object.keys(usersList)) {
-		usersList[userId].wsInstance.emit("username_changed", JSON.stringify({
-			id: publicId,
-			newUsername,
-		}))
-	}
+
+	spreadEventForAll("username_changed", { newUsername }, publicId)
 }
 
 export default changeUsername
