@@ -1,6 +1,15 @@
 import styles from "../styles/InputBar.module.css"
+import { useState } from "react"
 
-export default function InputBar() {
+export default function InputBar({
+	isFor = "message",
+	onSend = () => {},
+}: {
+	isFor?: "message" | "username"
+	onSend?: (textInput: string) => void
+}) {
+	const [value, setValue] = useState<string>("")
+
 	return (
 		<div className={styles.container}>
 			<input
@@ -9,9 +18,19 @@ export default function InputBar() {
 				id="name"
 				name="name"
 				required
-				placeholder="Taper votre message..."
+				placeholder={
+					isFor === "message"
+						? "Taper votre message..."
+						: "Taper votre nouveau nom..."
+				}
+				value={value}
+				onChange={event => setValue(event.target.value)}
 			/>
-			<button className={styles.button} type="submit">
+			<button
+				className={styles.button}
+				type="submit"
+				onClick={() => onSend(value)}
+			>
 				Envoyer
 			</button>
 		</div>

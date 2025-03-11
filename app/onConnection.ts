@@ -6,7 +6,7 @@ import endTyping from "./events/endTyping"
 import sendingMessage from "./events/sendingMessage"
 import usersList from "./usersList"
 
-function onConnection(socket: Socket){
+function onConnection(socket: Socket) {
 	const publicId = socket.id
 
 	newUser(socket, publicId)
