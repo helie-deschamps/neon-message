@@ -1,0 +1,33 @@
+.container {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-self: flex-end;
+}
+.bar {
+	width: 100%;
+	margin-right: 2%;
+	border-radius: 10px 10px 10px 10px;
+	border: solid 2px #ff66a3;
+	box-shadow:
+		0 0 16px #ff66a3,
+		0 0 32px #ff66a3;
+	background-color: #ffffff;
+	color: #ff66a3;
+	padding: 1%;
+}
+.bar::placeholder {
+	color: #ff66a3;
+}
+
+.button {
+	align-self: flex-end;
+	border-radius: 10px 10px 10px 10px;
+	border: solid 2px #ff66a3;
+	box-shadow:
+		0 0 16px #ff66a3,
+		0 0 32px #ff66a3;
+	background-color: #ffffff;
+	color: #ff66a3;
+	padding: 1%;
+}

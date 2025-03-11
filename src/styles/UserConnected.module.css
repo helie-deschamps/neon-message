@@ -1,0 +1,15 @@
+.title {
+	color: #ffffff;
+	margin-bottom: 10%;
+	text-shadow:
+		2px 0px 10px #ff66a3,
+		-2px 0px 10px #ff66a3;
+}
+.subtitle {
+	color: #ff66a3;
+	margin-bottom: 5%;
+}
+.user {
+	color: #ff66a3;
+	margin-bottom: 1%;
+}
