@@ -2,7 +2,6 @@
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
-	align-self: flex-end;
 }
 .bar {
 	width: 100%;

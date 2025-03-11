@@ -21,6 +21,14 @@
 	flex: 1;
 }
 
+.namebar{
+	height: 100svh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
 @media (max-width: 600px) {
 	.page {
 		padding: 32px;

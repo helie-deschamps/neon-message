@@ -73,7 +73,7 @@ export default function Home() {
 				</div>
 			</>
 		) : (
-			<div>
+			<div className={styles.namebar}>
 				<InputBar
 					isFor="username"
 					onSend={value => {
