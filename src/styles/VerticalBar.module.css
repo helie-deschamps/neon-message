@@ -1,0 +1,8 @@
+.VerticalBar {
+	height: 100%;
+	background-color: #ffffff;
+	width: 5px;
+	box-shadow:
+		0 0 16px #ff66a3,
+		0 0 32px #ff66a3;
+}
