@@ -5,6 +5,7 @@ import startTyping from "./events/startTyping"
 import endTyping from "./events/endTyping"
 import sendingMessage from "./events/sendingMessage"
 import usersList from "./usersList"
+import spreadEventForAll from "./spreadEventForAll"
 
 function onConnection(socket: Socket) {
 	const publicId = socket.id
@@ -16,10 +17,7 @@ function onConnection(socket: Socket) {
 		const { username } = usersList[publicId]
 		localUsersList.push({ publicId, username })
 	}
-	usersList[publicId].wsInstance.emit(
-		"updating_users_list",
-		JSON.stringify(localUsersList),
-	)
+	spreadEventForAll("updating_users_list", localUsersList)
 
 	socket.on("change_username", (data: string) => changeUsername(data, publicId))
 	socket.on("start_typing", () => startTyping(publicId))

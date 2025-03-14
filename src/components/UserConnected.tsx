@@ -7,7 +7,7 @@ export default function UserConnected({usersList}: {usersList: {publicId:string,
 			<h2 className={styles.subtitle}>Membres en lignes</h2>
 			{usersList.map((user, index) => (
 				<p key={index} className={styles.user}>
-					{user.username} est connecté.e
+					{user.username ?? "Utilisateur inconnu"} est connecté.e
 				</p>
 			))}
 		</div>

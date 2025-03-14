@@ -9,7 +9,6 @@ import InputBar from "@/components/InputBar"
 import Tapping from "@/components/Tapping"
 import UserConnected from "@/components/UserConnected"
 import VerticalBar from "@/components/VerticalBar"
-import onUsernameChanged from "@/events/onUsernameChanged"
 import onUpdatingUserList from "@/events/onUpdatingUsersList"
 
 const geistSans = Geist({
@@ -24,7 +23,7 @@ const geistMono = Geist_Mono({
 
 export default function Home() {
 	const [currentUsername, setCurrentUsername] = useState<undefined | string>()
-	const [currentPublicId, setCurrentPublicId] = useState<undefined | string>()
+	const [, setCurrentPublicId] = useState<undefined | string>()
 
 	const [isConnected, setIsConnected] = useState(false)
 
@@ -41,11 +40,8 @@ export default function Home() {
 		socket.on("connect", () => setIsConnected(true))
 		socket.on("disconnect", () => setIsConnected(false))
 
-		socket.on("username_changed", detail =>
-			onUsernameChanged(detail, usersList, setUsersList, setCurrentPublicId, setCurrentUsername),
-		)
 		socket.on("updating_users_list", detail =>
-			onUpdatingUserList(detail, setUsersList)
+			onUpdatingUserList(detail, setUsersList, setCurrentPublicId, setCurrentUsername),
 		)
 
 		return () => {

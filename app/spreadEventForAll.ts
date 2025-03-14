@@ -10,9 +10,9 @@ function spreadEventForAll(
 		usersList[userId].wsInstance.emit(
 			eventName,
 			JSON.stringify({
-				...datas,
+				v: datas,
 				id: publicId,
-				isYou: sayIsYou && userId === publicId
+				you: { publicId: userId, username: usersList[userId].username},
 			}),
 		)
 	}
