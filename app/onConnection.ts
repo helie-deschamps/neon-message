@@ -11,6 +11,16 @@ function onConnection(socket: Socket) {
 
 	newUser(socket, publicId)
 
+	const localUsersList = []
+	for (const publicId of Object.keys(usersList)) {
+		const { username } = usersList[publicId]
+		localUsersList.push({ publicId, username })
+	}
+	usersList[publicId].wsInstance.emit(
+		"updating_users_list",
+		JSON.stringify(localUsersList),
+	)
+
 	socket.on("change_username", (data: string) => changeUsername(data, publicId))
 	socket.on("start_typing", () => startTyping(publicId))
 	socket.on("end_typing", () => endTyping(publicId))

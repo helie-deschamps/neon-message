@@ -10,7 +10,7 @@ function changeUsername(data: string, publicId: PublicId) {
 	const { newUsername }: ChangeUsernameDatas = JSON.parse(data)
 	usersList[publicId].username = newUsername
 
-	spreadEventForAll("username_changed", { newUsername }, publicId)
+	spreadEventForAll("username_changed", { newUsername }, publicId, true)
 }
 
 export default changeUsername

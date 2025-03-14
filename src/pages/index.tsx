@@ -10,6 +10,7 @@ import Tapping from "@/components/Tapping"
 import UserConnected from "@/components/UserConnected"
 import VerticalBar from "@/components/VerticalBar"
 import onUsernameChanged from "@/events/onUsernameChanged"
+import onUpdatingUserList from "@/events/onUpdatingUsersList"
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -23,8 +24,14 @@ const geistMono = Geist_Mono({
 
 export default function Home() {
 	const [currentUsername, setCurrentUsername] = useState<undefined | string>()
+	const [currentPublicId, setCurrentPublicId] = useState<undefined | string>()
 
 	const [isConnected, setIsConnected] = useState(false)
+
+	const [usersList, setUsersList] = useState<{publicId:string, username: string | undefined}[]>([])
+	useEffect(() => {
+		console.log(usersList)
+	}, [usersList])
 
 	useEffect(() => {
 		if (socket.connected) {
@@ -35,7 +42,10 @@ export default function Home() {
 		socket.on("disconnect", () => setIsConnected(false))
 
 		socket.on("username_changed", detail =>
-			onUsernameChanged(detail, setCurrentUsername),
+			onUsernameChanged(detail, usersList, setUsersList, setCurrentPublicId, setCurrentUsername),
+		)
+		socket.on("updating_users_list", detail =>
+			onUpdatingUserList(detail, setUsersList)
 		)
 
 		return () => {
@@ -56,7 +66,7 @@ export default function Home() {
 				<div className={`${geistSans.variable} ${geistMono.variable}`}>
 					<main className={styles.main}>
 						<div className={styles.user}>
-							<UserConnected />
+							<UserConnected usersList={usersList} />
 						</div>
 						<VerticalBar />
 						<div className={styles.chat}>
