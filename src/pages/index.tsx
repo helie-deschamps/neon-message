@@ -33,6 +33,8 @@ export default function Home() {
 
 	const [usersTyping, setUsersTyping] = useState<string[]>([])
 
+	const [messages, setMessages] = useState<{ text: string, time: string, fromMe: boolean }[]>([])
+
 	useEffect(() => {
 		if (socket.connected) {
 			setIsConnected(true)
@@ -59,6 +61,19 @@ export default function Home() {
 				previousUsersTyping.filter(username => username !== v.username)
 			)
 		})
+		socket.on("message_sent", detail => {
+			const { v, id, you: { publicId } }: { v: { message: string }, id: string, you: { publicId: string } } = JSON.parse(detail)
+
+			setMessages(previousMessages => [
+				...previousMessages,
+				{
+					text: v.message,
+					time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+					fromMe: id === publicId
+				}
+			])
+		})
+
 
 		return () => {
 			socket.off("connect", () => setIsConnected(true))
@@ -83,14 +98,25 @@ export default function Home() {
 						<VerticalBar />
 						<div className={styles.chat}>
 							<div className={styles.message}>
-								<Messagereceveid />
-								<MessageSend />
+								{messages.reverse().map(
+									(message, key) =>
+												message.fromMe
+													? (<MessageSend key={key} text={message.text} time={message.time} />)
+													: (<Messagereceveid key={key} text={message.text} time={message.time} />)
+									)}
 							</div>
 							<div>
 								<Tapping usersTyping={usersTyping} />
 								<InputBar
 									onStartTyping={() => socket.emit("start_typing")}
 									onEndTyping={() => socket.emit("end_typing")}
+									onSend={value => {
+										if (value !== "")
+											socket.emit(
+												"sending_message",
+												JSON.stringify({ message: value }),
+											)
+									}}
 								/>
 							</div>
 						</div>
