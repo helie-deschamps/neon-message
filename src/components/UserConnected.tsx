@@ -1,6 +1,10 @@
 import styles from "../styles/UserConnected.module.css"
 
-export default function UserConnected({usersList}: {usersList: {publicId:string, username: string | undefined}[]}) {
+export default function UserConnected({
+	usersList,
+}: {
+	usersList: { publicId: string; username: string | undefined }[]
+}) {
 	return (
 		<div className={styles.container}>
 			<h1 className={styles.title}>Neon Message</h1>

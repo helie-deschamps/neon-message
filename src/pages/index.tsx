@@ -27,10 +27,11 @@ export default function Home() {
 
 	const [isConnected, setIsConnected] = useState(false)
 
-	const [usersList, setUsersList] = useState<{publicId:string, username: string | undefined}[]>([])
-	useEffect(() => {
-		console.log(usersList)
-	}, [usersList])
+	const [usersList, setUsersList] = useState<
+		{ publicId: string; username: string | undefined }[]
+	>([])
+
+	const [usersTyping, setUsersTyping] = useState<string[]>([])
 
 	useEffect(() => {
 		if (socket.connected) {
@@ -41,8 +42,23 @@ export default function Home() {
 		socket.on("disconnect", () => setIsConnected(false))
 
 		socket.on("updating_users_list", detail =>
-			onUpdatingUserList(detail, setUsersList, setCurrentPublicId, setCurrentUsername),
+			onUpdatingUserList(
+				detail,
+				setUsersList,
+				setCurrentPublicId,
+				setCurrentUsername,
+			),
 		)
+		socket.on("stared_typing", detail => {
+			const { v }: { v: { username: string } } = JSON.parse(detail)
+			setUsersTyping(previousUsersTyping => [...previousUsersTyping, v.username])
+		})
+		socket.on("ended_typing", detail => {
+			const { v }: { v: { username: string } } = JSON.parse(detail)
+			setUsersTyping(previousUsersTyping =>
+				previousUsersTyping.filter(username => username !== v.username)
+			)
+		})
 
 		return () => {
 			socket.off("connect", () => setIsConnected(true))
@@ -71,8 +87,11 @@ export default function Home() {
 								<MessageSend />
 							</div>
 							<div>
-								<Tapping />
-								<InputBar />
+								<Tapping usersTyping={usersTyping} />
+								<InputBar
+									onStartTyping={() => socket.emit("start_typing")}
+									onEndTyping={() => socket.emit("end_typing")}
+								/>
 							</div>
 						</div>
 					</main>

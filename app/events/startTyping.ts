@@ -1,8 +1,10 @@
 import { PublicId } from "../User"
 import spreadEventForAll from "../spreadEventForAll"
+import usersList from "../usersList"
 
 function startTyping(publicId: PublicId) {
-	spreadEventForAll("stared_typing", undefined, publicId)
+	const username = usersList[publicId].username
+	spreadEventForAll("stared_typing", { username }, publicId)
 }
 
 export default startTyping
