@@ -33,7 +33,9 @@ export default function Home() {
 
 	const [usersTyping, setUsersTyping] = useState<string[]>([])
 
-	const [messages, setMessages] = useState<{ text: string, time: string, fromMe: boolean }[]>([])
+	const [messages, setMessages] = useState<
+		{ text: string; time: string; fromMe: boolean }[]
+	>([])
 
 	useEffect(() => {
 		if (socket.connected) {
@@ -53,27 +55,40 @@ export default function Home() {
 		)
 		socket.on("stared_typing", detail => {
 			const { v }: { v: { username: string } } = JSON.parse(detail)
-			setUsersTyping(previousUsersTyping => [...previousUsersTyping, v.username])
+			setUsersTyping(previousUsersTyping => [
+				...previousUsersTyping,
+				v.username,
+			])
 		})
 		socket.on("ended_typing", detail => {
 			const { v }: { v: { username: string } } = JSON.parse(detail)
 			setUsersTyping(previousUsersTyping =>
-				previousUsersTyping.filter(username => username !== v.username)
+				previousUsersTyping.filter(username => username !== v.username),
 			)
 		})
 		socket.on("message_sent", detail => {
-			const { v, id, you: { publicId } }: { v: { message: string }, id: string, you: { publicId: string } } = JSON.parse(detail)
+			const {
+				v,
+				id,
+				you: { publicId },
+			}: {
+				v: { message: string }
+				id: string
+				you: { publicId: string }
+			} = JSON.parse(detail)
 
 			setMessages(previousMessages => [
 				...previousMessages,
 				{
 					text: v.message,
-					time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-					fromMe: id === publicId
-				}
+					time: new Date().toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					}),
+					fromMe: id === publicId,
+				},
 			])
 		})
-
 
 		return () => {
 			socket.off("connect", () => setIsConnected(true))
@@ -98,11 +113,22 @@ export default function Home() {
 						<VerticalBar />
 						<div className={styles.chat}>
 							<div className={styles.message}>
-								{messages.reverse().map(
-									(message, key) =>
-												message.fromMe
-													? (<MessageSend key={key} text={message.text} time={message.time} />)
-													: (<Messagereceveid key={key} text={message.text} time={message.time} />)
+								{messages
+									.reverse()
+									.map((message, key) =>
+										message.fromMe ? (
+											<MessageSend
+												key={key}
+												text={message.text}
+												time={message.time}
+											/>
+										) : (
+											<Messagereceveid
+												key={key}
+												text={message.text}
+												time={message.time}
+											/>
+										),
 									)}
 							</div>
 							<div>

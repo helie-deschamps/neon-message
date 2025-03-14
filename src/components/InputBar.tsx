@@ -17,8 +17,7 @@ export default function InputBar({
 	const [isTyping, setIsTyping] = useState(false)
 	const lastTimeTyping = useRef(Date.now())
 	useEffect(() => {
-		if (isTyping)
-			onStartTyping()
+		if (isTyping) onStartTyping()
 		else {
 			onEndTyping()
 		}
@@ -26,8 +25,7 @@ export default function InputBar({
 	//each second
 	useEffect(() => {
 		setInterval(() => {
-			if (Date.now() - lastTimeTyping.current > 900)
-			setIsTyping(false)
+			if (Date.now() - lastTimeTyping.current > 900) setIsTyping(false)
 		}, 200)
 	}, [])
 
