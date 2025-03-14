@@ -6,6 +6,7 @@ import endTyping from "./events/endTyping"
 import sendingMessage from "./events/sendingMessage"
 import usersList from "./usersList"
 import spreadEventForAll from "./spreadEventForAll"
+import spreadUsersForAll from "./spreadUsersForAll"
 
 function onConnection(socket: Socket) {
 	const publicId = socket.id
@@ -26,6 +27,7 @@ function onConnection(socket: Socket) {
 
 	socket.on("disconnect", () => {
 		delete usersList[publicId]
+		spreadUsersForAll()
 	})
 }
 
